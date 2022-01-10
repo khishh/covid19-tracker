@@ -1,15 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
 
-// export interface Report {
-//     reporter: Reporter,
-//     location: Location,
-//     visitedDate: Date,
-//     // id: string
-// }
-
 const reportSchema = new mongoose.Schema({
-    reporter: {type: Schema.Types.ObjectId, ref: "Reporter"},
-    location: {type: Schema.Types.ObjectId, ref: "Location"},
+    reporterName: {type: String, required: true, lowercase: true, trim: true},
+    reporterPhoneNumber: {type: String, required: true, trim: true},
+    locationName: {type: String, required: true, lowercase: true, trim: true},
+    latitude: {type: Number, required: true, min: -90, max: 90},
+    longitude: {type: Number, required: true, min: -180, max: 180},
     visitedDate: {type: Date, required: true},
 }, {timestamps: true});
 

@@ -1,7 +1,9 @@
 require('dotenv').config('./.env');
 import express from 'express';
 import mongoose from 'mongoose';
-import LocationRouter from './routes/location';
+import LocationsRouter from './routes/locations';
+import ReportsRouter from './routes/reports';
+import cors from 'cors';
 
 const app = express();
 
@@ -13,8 +15,10 @@ mongoose.connect(mongodbURL, () => {
     console.log('MongoDB connected successfully');
 });
 
+app.use(cors());
 app.use(express.json());
-app.use('/locations', LocationRouter);
+app.use('/locations', LocationsRouter);
+app.use('/reports', ReportsRouter);
 
 app.get('/', (req, res) => res.send('Hello World'));
 

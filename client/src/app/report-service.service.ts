@@ -14,7 +14,7 @@ export class ReportServiceService{
   addSubject : Subject<Report> = new Subject();
   deletedReport? : Report;
   delete_index : number = -1;
-  base_url = 'https://218.selfip.net/apps/2ix38yISAt/collections/Data/documents/'
+  base_url = 'http://localhost:8080/reports'
 
   constructor(private http : HttpClient) {}
 
@@ -23,24 +23,24 @@ export class ReportServiceService{
       .pipe(
         map(data => {
           // transform json to Report Object
+          console.log(data);
+          
           let _reports : Report[] = [];
           for(var i = 0; i < data.length; i++){
+            let _data = data[i];
             console.log(data[i]);
-            let _data = data[i]['data'];
-            let _data_reporter = _data['reporter'];
-            let _data_location = _data['location'];
-            let _data_visitDate : string = _data['visitedDate'];
+            let _data_visitDate : string = _data.visitedDate;
             _data_visitDate = _data_visitDate.slice(0, -1);
             console.log(_data_visitDate);
             let _report = new Report(
-              _data_reporter['name'],
-              _data_reporter['phone_number'],
-              _data_location['name'],
-              parseFloat(_data_location['longitude']),
-              parseFloat(_data_location['latitude']),
+              _data._id,
+              _data.reporterName,
+              _data.reporterPhoneNumber,
+              _data.locationName,
+              _data.longitude,
+              _data.latitude,
               new Date(_data_visitDate)
             );
-            _report.id = data[i]['key'];
             console.log(_report);
             _reports.push(_report);
           }
@@ -58,6 +58,10 @@ export class ReportServiceService{
   setAddedObject(newReport : Report){
     console.log('setAddedObject');
     console.log("length is " + this.reports.length)
+    console.log(newReport);
+
+    this.reports.push(newReport);
+    
     this.addSubject.next(newReport);
   }
 
@@ -73,44 +77,38 @@ export class ReportServiceService{
     return this.removeSubject;
   }
 
-  getAddSubject(): Subject<any> {
+  getAddSubject(): Subject<Report> {
     return this.addSubject;
   }
 
   retrivedRepoerById(reportId : String) : Observable<any>{
-    let target_url = `${this.base_url}${reportId}/`;
+    let target_url = `${this.base_url}/${reportId}`;
     let _report : Report;
     return this.http.get<any>(target_url)
       .pipe(
         map(data => {
-          // transform json to Report Object
-          let _data = data['data'];
-          let _data_reporter = _data['reporter'];
-          let _data_location = _data['location'];
-          let _data_visitDate : string = _data['visitedDate'];
+          let _data_visitDate : string = data.visitedDate;
           _data_visitDate = _data_visitDate.slice(0, -1);
           console.log(_data_visitDate);
           _report = new Report(
-            _data_reporter['name'],
-            _data_reporter['phone_number'],
-            _data_location['name'],
-            _data_location['longitude'],
-            _data_location['latitude'],
+            data._id,
+            data.reporterName,
+            data.reporterPhoneNumber,
+            data.locationName,
+            data.longitude,
+            data.latitude,
             new Date(_data_visitDate)
           );
-          _report.id = data['key'];
           console.log(_report);
           return _report;
           })
       );
   }
 
-  add(newReport : Report) : Observable<Report> {
-    this.reports.push(newReport);
-    return this.http.post<Report>(this.base_url, {
-      "key" : newReport.id,
-      "data" : newReport
-    });
+  add(newReport : any) : Observable<any> {
+    console.log(newReport);
+    
+    return this.http.post<any>(`${this.base_url}/add`, newReport);
   }
 
   delete(reportId : string) : Observable<Report>{
@@ -119,14 +117,14 @@ export class ReportServiceService{
     console.log("DELETE");
     let del_index = -1;
     for(var i = 0; i < this.reports.length; i++){
-      if(this.reports[i].id == reportId){
+      if(this.reports[i]._id == reportId){
         del_index = i;
         break;
       }
     }
    
     console.log(this.reports[del_index]);
-    let del_target_url = `${this.base_url}${reportId}/`
+    let del_target_url = `${this.base_url}/${reportId}/`
     console.log(del_target_url);
     // this.http.delete(del_target_url).subscribe(
     //   () => this.reports.splice(del_index, 1)

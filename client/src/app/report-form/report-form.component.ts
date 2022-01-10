@@ -14,7 +14,7 @@ import { ReportServiceService } from '../report-service.service';
 export class ReportFormComponent implements OnInit {
 
   form! : FormGroup;
-  newReport? : Report;
+  newReport? : any;
 
   names : string[] = [];
   lats : string[] = [];
@@ -29,15 +29,16 @@ export class ReportFormComponent implements OnInit {
   constructor(private rs : ReportServiceService, private router : Router, private ls : LocationnameService) { }
 
   ngOnInit(): void {
-    // this.ls.init();
+    console.log('ReportFormComponent onInit');
+    
     this.ls.get().subscribe(
       (data) => {
         console.log(data);
         data.forEach(
           (_d) => {
-            var name = _d['key'];
-            var lat = _d['data']['_lat'];
-            var lon = _d['data']['_lon'];
+            var name = _d.name;
+            var lat = _d.latitude;
+            var lon = _d.longitude;
             // console.log(name, lat, lon);
             this.names.push(name);
             this.lats.push(lat);
@@ -90,33 +91,44 @@ export class ReportFormComponent implements OnInit {
   
     let dateVisited: Date = this.transformDateFromInput(formValue.date, formValue.time);
     console.log(dateVisited);
-    this.newReport = new Report(
-      formValue.reporter_name,
-      formValue.phone_number,
-      formValue.location_name,
-      formValue.longitude,
-      formValue.latitude,
-      dateVisited
-    );
+    this.newReport = {
+      reporterName: formValue.reporter_name,
+      reporterPhoneNumber: formValue.phone_number,
+      locationName: formValue.location_name,
+      longitude: formValue.longitude,
+      latitude: formValue.latitude,
+      visitedDate: dateVisited
+    };
     console.log("event emit");
+
     this.rs.add(this.newReport).subscribe(
       (data) => {
         console.log(data);
         console.log("length is " + this.rs.get2().length)
-        this.rs.setAddedObject(data);
+        this.rs.setAddedObject(new Report(
+          data._id,
+          data.reporterName,
+          data.reporterPhoneNumber,
+          data.locationName,
+          data.longitude,
+          data.latitude, 
+          data.visitedDate
+        ));
         this.router.navigate(['/'])
       }
     )
 
+    
     if(this.saveNew){
-      var _lat : number = this.newReport.location.latitude;
-      var _lon : number = this.newReport.location.longitude;
-      this.ls.add(this.newReport.location.name, 
-        _lat.toString(),
-        _lon.toString())
+      
+      var _lat : number = Number(this.newReport.latitude);
+      var _lon : number = Number(this.newReport.longitude);
+      console.log(_lat + " " + _lon);
+      
+      this.ls.add(this.newReport.locationName, _lat,_lon)
         .subscribe(
           (data) => {
-            console.log("added new location on server");
+            console.log("added new location on server " + data);
           }
         )
     }

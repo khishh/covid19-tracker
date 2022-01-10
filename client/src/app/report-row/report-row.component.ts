@@ -21,7 +21,7 @@ export class ReportRowComponent implements OnInit {
 
   onRemoveClicked(){
     console.log("onRemoveClicked");
-    this.rs.delete(this.report.id).subscribe(
+    this.rs.delete(this.report._id).subscribe(
       () => {
         console.log("==== after delete, ")
         this.rs.setDeletedObject();

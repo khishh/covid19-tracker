@@ -105,11 +105,12 @@ export class AppComponent implements OnInit, AfterViewInit{
     )
 
     this.rs.getAddSubject().subscribe(
-      (data) => {
+      (report) => {
         console.log("========= subject add =========");
-        var _data = data["data"];
-        var _lat : number = parseFloat(_data['location']['latitude']);
-        var _lon : number = parseFloat(_data['location']['longitude']);
+        console.log(report);
+        
+        var _lat : number = report.location.latitude;
+        var _lon : number = report.location.longitude;
         var latlon_key = _lat + '-' + _lon;
         console.log(latlon_key);
         var curCount;
@@ -118,7 +119,7 @@ export class AppComponent implements OnInit, AfterViewInit{
           console.log("----------first case");
           curCount = 0;
           console.log(curCount);
-          var newMarker = L.marker([_data['location']['latitude'], _data['location']['longitude']]);
+          var newMarker = L.marker([_lat, _lon]);
           newMarker.addTo(this.map);
           this.markerHashMap.set(latlon_key, newMarker);
           this.countHashMap.set(latlon_key, 1);
