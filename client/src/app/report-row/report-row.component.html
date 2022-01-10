@@ -1,0 +1,12 @@
+
+<td scope="col">{{ report.location.name }}</td>
+<td scope="col">{{ report.reporter.name | lowercase }}</td>
+<td scope="col">{{ report.visitedDate | date:"MM/dd/yyyy hh:mm" }}</td>
+<td scope="col">
+    <button  class="btn btn-warning"
+    (click)="onRemoveClicked()">Remove</button>
+</td>
+<td scope="col">
+    <button class="btn btn-info" routerLink = '/view/{{ report.id }}'>More Info</button>
+</td>
+

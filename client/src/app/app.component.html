@@ -1,0 +1,11 @@
+<h2 class = "mb-3 text-center">Covid19 Tracker App</h2>
+
+<div id="mapid" style="width:100%;height:400px"></div>
+
+
+<app-reporttable [reports] = "reports"
+></app-reporttable>
+
+<!-- <app-report-form></app-report-form> -->
+<button class="btn btn-primary" routerLink = "/add">Add New Report</button>
+<router-outlet></router-outlet>

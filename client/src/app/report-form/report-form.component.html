@@ -1,0 +1,82 @@
+<form
+    [formGroup] = "form"
+    (ngSubmit) = "onSubmit(form.value)"
+>
+   
+    <div class="form-group">
+        <select (change)=dropdownChanged($event)>
+            <option value="none">Select from below</option>
+            <option value="createNew">Create new location</option>
+            <option
+                *ngFor = "let l of names"
+            >
+                {{l}}
+            </option>
+        </select>
+    </div>
+    
+    <div *ngIf="createNew">
+        <div class="form-group">
+            <label for="" >Location Visited</label>
+            <input type="text" class="form-control" formControlName = "location_name">
+        </div>
+        <div class="form-group">
+            <label for="">Would you like to save this new address in the server?</label>
+            <input (click) = "toggleSave()" class="form-check-input" type="checkbox" id="">
+        </div>
+        
+    </div>
+
+
+    <div class="form-group">
+        <label for="">Latitude</label>
+        <input type="text" class="form-control" id="latitude" formControlName = "latitude">
+    </div>
+    
+    <div class="form-group">
+        <label for="" >Longitude</label>
+        <input type="text" class="form-control" id="longitude" formControlName = "longitude">    
+    </div>
+        
+    <div class="form-group">
+        <label for="" >Your Name</label>
+        <input type="text" class="form-control" formControlName = "reporter_name">
+    </div>
+
+    
+    <div class="form-group">
+        <label for="" >Your Phone Number</label>
+        <input type="text" class="form-control" formControlName = "phone_number">
+    </div>
+
+    
+    <label for="" >Date of visit</label>
+    <input type="date" formControlName = 'date'>
+
+    <br>
+
+    <label for="" >Time of visit</label>
+    <input type="time" formControlName = 'time'>
+    <br>
+
+
+
+    <!-- <form>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form> -->
+
+    <button class="btn btn-dark" [disabled] = '!form.valid'>Save</button>
+</form>

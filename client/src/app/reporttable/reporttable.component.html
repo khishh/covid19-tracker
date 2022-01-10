@@ -1,0 +1,22 @@
+
+<table class="table">
+
+    <thead class="thead-dark">
+        <tr>
+          <th (click)=sortByLocatioName() scope="col">Location Name</th>
+          <th (click)=sortByUserName() scope="col">Person reported</th>
+          <th (click)=sortByDate() scope="col">Date of visit</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr app-report-row
+        *ngFor = "let r of reports"
+        [report] = "r"
+        ></tr>
+    </tbody>    
+
+</table>
+
